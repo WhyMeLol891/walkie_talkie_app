@@ -1,0 +1,88 @@
+{
+    "channel": "test-room-63ba84",
+    "created_at": 1791788417,
+    "updated_at": 1791788417,
+    "speaker": null,
+    "peers": {
+        "peer_b": {
+            "peer_id": "peer_b",
+            "nickname": "Bob",
+            "joined_at": 1791788417,
+            "last_seen": 1791788417
+        }
+    },
+    "sequence": 8,
+    "events": [
+        {
+            "type": "peer_joined",
+            "peer_id": "peer_a",
+            "nickname": "Alice",
+            "seq": 1,
+            "target": null,
+            "timestamp": 1791788417
+        },
+        {
+            "type": "peer_joined",
+            "peer_id": "peer_b",
+            "nickname": "Bob",
+            "seq": 2,
+            "target": null,
+            "timestamp": 1791788417
+        },
+        {
+            "type": "speaker_started",
+            "peer_id": "peer_a",
+            "nickname": "Alice",
+            "timeout_ms": 30000,
+            "seq": 3,
+            "target": null,
+            "timestamp": 1791788417
+        },
+        {
+            "type": "speaker_stopped",
+            "peer_id": "peer_a",
+            "nickname": "Alice",
+            "reason": "released",
+            "seq": 4,
+            "target": null,
+            "timestamp": 1791788417
+        },
+        {
+            "type": "speaker_started",
+            "peer_id": "peer_b",
+            "nickname": "Bob",
+            "timeout_ms": 30000,
+            "seq": 5,
+            "target": null,
+            "timestamp": 1791788417
+        },
+        {
+            "type": "speaker_stopped",
+            "peer_id": "peer_b",
+            "nickname": "Bob",
+            "reason": "released",
+            "seq": 6,
+            "target": null,
+            "timestamp": 1791788417
+        },
+        {
+            "type": "signal",
+            "from_peer_id": "peer_a",
+            "data": {
+                "type": "offer",
+                "sdp": "v=0\\r\\no=alice 123 456 IN IP4 127.0.0.1"
+            },
+            "seq": 7,
+            "target": "peer_b",
+            "timestamp": 1791788417
+        },
+        {
+            "type": "peer_left",
+            "peer_id": "peer_a",
+            "nickname": "Alice",
+            "seq": 8,
+            "target": null,
+            "timestamp": 1791788417
+        }
+    ]
+}

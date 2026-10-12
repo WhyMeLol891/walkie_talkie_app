@@ -1,0 +1,671 @@
+/* ==========================================================================
+   WALKIE-TALKIE PWA STYLESHEET
+   Tactical Digital Communication Interface
+   ========================================================================== */
+
+:root {
+    --wt-bg-main: #0c1017;
+    --wt-bg-panel: #151b24;
+    --wt-bg-lcd: #0a1714;
+    --wt-border: #232c3d;
+    --wt-accent-green: #00ff88;
+    --wt-accent-amber: #ffaa00;
+    --wt-accent-red: #ff3344;
+    --wt-accent-cyan: #00d9ff;
+    --wt-text-dim: #7f8fa4;
+    --wt-font-heading: 'Chakra Petch', system-ui, sans-serif;
+    --wt-font-mono: 'JetBrains Mono', monospace;
+    --wt-font-sans: 'Inter', system-ui, sans-serif;
+}
+
+body.wt-body {
+    background-color: var(--wt-bg-main);
+    color: #f0f6fc;
+    font-family: var(--wt-font-sans);
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Subtle Tactical Texture Overlay */
+.wt-noise-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    opacity: 0.03;
+    background-image: radial-gradient(#fff 1px, transparent 1px);
+    background-size: 16px 16px;
+    z-index: 1000;
+}
+
+/* --------------------------------------------------------------------------
+   Radio Chassis & Antenna
+   -------------------------------------------------------------------------- */
+.wt-radio-chassis {
+    background: linear-gradient(180deg, #18202c 0%, #111620 100%);
+    border: 1px solid var(--wt-border) !important;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    position: relative;
+    overflow: hidden;
+}
+
+.wt-handset {
+    min-height: 82vh;
+}
+
+.wt-radio-top-bar {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.wt-antenna-mount {
+    position: relative;
+    width: 24px;
+    height: 14px;
+}
+
+.wt-antenna-rod {
+    display: inline-block;
+    width: 8px;
+    height: 12px;
+    background: #3a475a;
+    border-radius: 3px 3px 0 0;
+    box-shadow: inset 1px 0 2px rgba(255, 255, 255, 0.2);
+}
+
+.wt-antenna-tip {
+    display: inline-block;
+    width: 12px;
+    height: 4px;
+    background: #566985;
+    border-radius: 2px;
+    position: absolute;
+    top: -2px;
+    left: -2px;
+}
+
+.wt-digital-band {
+    font-family: var(--wt-font-mono);
+    font-size: 0.7rem;
+    color: var(--wt-text-dim);
+    letter-spacing: 1px;
+}
+
+/* --------------------------------------------------------------------------
+   LED Dots & Connection States
+   -------------------------------------------------------------------------- */
+.wt-led-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    box-shadow: 0 0 8px currentColor;
+    transition: all 0.3s ease;
+}
+
+.wt-led-green {
+    background-color: var(--wt-accent-green);
+    color: var(--wt-accent-green);
+}
+
+.wt-led-amber {
+    background-color: var(--wt-accent-amber);
+    color: var(--wt-accent-amber);
+}
+
+.wt-led-red {
+    background-color: var(--wt-accent-red);
+    color: var(--wt-accent-red);
+}
+
+.wt-led-dot.pulse {
+    animation: wt-pulse 1.5s infinite;
+}
+
+@keyframes wt-pulse {
+    0% { transform: scale(0.9); opacity: 0.6; }
+    50% { transform: scale(1.15); opacity: 1; }
+    100% { transform: scale(0.9); opacity: 0.6; }
+}
+
+.wt-badge-status {
+    font-family: var(--wt-font-heading);
+    font-weight: 700;
+    font-size: 0.72rem;
+    letter-spacing: 1.5px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+}
+
+.wt-status-connected {
+    background: rgba(0, 255, 136, 0.15);
+    color: var(--wt-accent-green);
+    border: 1px solid rgba(0, 255, 136, 0.4);
+}
+
+.wt-status-connecting {
+    background: rgba(255, 170, 0, 0.15);
+    color: var(--wt-accent-amber);
+    border: 1px solid rgba(255, 170, 0, 0.4);
+}
+
+.wt-status-reconnecting {
+    background: rgba(255, 170, 0, 0.25);
+    color: var(--wt-accent-amber);
+    border: 1px solid rgba(255, 170, 0, 0.6);
+    animation: wt-blink 1s infinite alternate;
+}
+
+.wt-status-disconnected {
+    background: rgba(255, 51, 68, 0.15);
+    color: var(--wt-accent-red);
+    border: 1px solid rgba(255, 51, 68, 0.4);
+}
+
+@keyframes wt-blink {
+    from { opacity: 0.4; }
+    to { opacity: 1; }
+}
+
+/* --------------------------------------------------------------------------
+   Branding & Typography
+   -------------------------------------------------------------------------- */
+.wt-app-title {
+    font-family: var(--wt-font-heading);
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: #ffffff;
+    text-shadow: 0 0 15px rgba(0, 217, 255, 0.4);
+}
+
+.wt-subtitle {
+    font-family: var(--wt-font-heading);
+    font-size: 0.75rem;
+    color: var(--wt-accent-cyan);
+    letter-spacing: 2px;
+}
+
+.wt-logo-badge {
+    display: inline-flex;
+    padding: 16px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #1a2736 0%, #101824 100%);
+    border: 2px solid var(--wt-border);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+.wt-logo-icon {
+    color: var(--wt-accent-cyan);
+    filter: drop-shadow(0 0 8px rgba(0, 217, 255, 0.6));
+}
+
+/* --------------------------------------------------------------------------
+   Digital LCD Screen (Channel Interface)
+   -------------------------------------------------------------------------- */
+.wt-lcd-screen {
+    background: radial-gradient(ellipse at center, #0d221c 0%, #06110e 100%);
+    border: 2px solid #14352a;
+    color: #4efcd2;
+    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.8), 0 0 8px rgba(0, 255, 136, 0.1);
+}
+
+.wt-lcd-brand {
+    font-family: var(--wt-font-heading);
+    font-weight: 700;
+    font-size: 0.8rem;
+    letter-spacing: 1.5px;
+    color: #4efcd2;
+}
+
+.wt-lcd-dim {
+    font-family: var(--wt-font-mono);
+    font-size: 0.72rem;
+    color: #277963;
+}
+
+.wt-lcd-separator {
+    color: #1a4f41;
+}
+
+.wt-lcd-label {
+    font-family: var(--wt-font-heading);
+    font-size: 0.65rem;
+    color: #2e8b72;
+    letter-spacing: 1px;
+}
+
+.wt-lcd-channel {
+    font-family: var(--wt-font-heading);
+    font-size: 1.45rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #79ffe0;
+    text-shadow: 0 0 10px rgba(78, 252, 210, 0.5);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+}
+
+.wt-lcd-callsign {
+    font-family: var(--wt-font-mono);
+    font-size: 1.05rem;
+    color: #ffffff;
+}
+
+.wt-lcd-sub {
+    font-family: var(--wt-font-mono);
+    font-size: 0.7rem;
+    color: var(--wt-text-dim);
+}
+
+/* --------------------------------------------------------------------------
+   Live Speaker Banner
+   -------------------------------------------------------------------------- */
+.wt-speaker-banner {
+    background: rgba(17, 24, 34, 0.85);
+    border: 1px solid var(--wt-border);
+    transition: all 0.3s ease;
+}
+
+.wt-speaker-banner.wt-state-idle {
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+.wt-speaker-banner.wt-state-talking-self {
+    background: rgba(255, 51, 68, 0.15);
+    border-color: var(--wt-accent-red);
+    box-shadow: 0 0 15px rgba(255, 51, 68, 0.3);
+}
+
+.wt-speaker-banner.wt-state-talking-other {
+    background: rgba(0, 217, 255, 0.15);
+    border-color: var(--wt-accent-cyan);
+    box-shadow: 0 0 15px rgba(0, 217, 255, 0.3);
+}
+
+.wt-speaker-banner.wt-state-busy {
+    background: rgba(255, 170, 0, 0.15);
+    border-color: var(--wt-accent-amber);
+    box-shadow: 0 0 15px rgba(255, 170, 0, 0.3);
+}
+
+.wt-speaker-text {
+    font-family: var(--wt-font-heading);
+    font-size: 1.05rem;
+    letter-spacing: 1px;
+}
+
+.wt-floor-countdown {
+    font-family: var(--wt-font-mono);
+}
+
+/* --------------------------------------------------------------------------
+   VU Meter Canvas
+   -------------------------------------------------------------------------- */
+.wt-visualizer-container {
+    background: #090e15;
+    border: 1px solid #1a222f;
+    padding: 8px;
+    border-radius: 8px;
+}
+
+.wt-vu-canvas {
+    background-color: #06090e;
+    display: block;
+    border-radius: 4px;
+}
+
+/* --------------------------------------------------------------------------
+   PUSH-TO-TALK (PTT) CIRCULAR BUTTON
+   -------------------------------------------------------------------------- */
+.wt-ptt-section {
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
+
+.wt-ptt-outer-ring {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #222d3d 0%, #101620 100%);
+    padding: 10px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8), inset 0 2px 4px rgba(255, 255, 255, 0.15);
+    border: 3px solid #2d3b50;
+    position: relative;
+    transition: transform 0.1s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.wt-ptt-btn {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 2px solid #3c4f6b;
+    background: radial-gradient(circle, #1e2634 0%, #121822 100%);
+    color: #e2e8f0;
+    cursor: pointer;
+    outline: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5), inset 0 2px 4px rgba(255, 255, 255, 0.1);
+    transition: all 0.15s ease;
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.wt-ptt-btn:focus-visible {
+    border-color: var(--wt-accent-cyan);
+    box-shadow: 0 0 0 4px rgba(0, 217, 255, 0.4);
+}
+
+.wt-ptt-inner-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.wt-ptt-action-label {
+    font-family: var(--wt-font-heading);
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+.wt-ptt-hint {
+    font-family: var(--wt-font-mono);
+    font-size: 0.65rem;
+    color: var(--wt-text-dim);
+    letter-spacing: 1px;
+}
+
+/* PTT State: Hover */
+.wt-ptt-btn:hover:not(:disabled) {
+    background: radial-gradient(circle, #263143 0%, #151d29 100%);
+    border-color: #4f688e;
+}
+
+/* PTT State: ACTIVE / TRANSMITTING */
+.wt-ptt-outer-ring.is-transmitting {
+    border-color: var(--wt-accent-red);
+    box-shadow: 0 0 35px rgba(255, 51, 68, 0.7), inset 0 0 15px rgba(255, 51, 68, 0.4);
+    transform: scale(0.97);
+}
+
+.wt-ptt-outer-ring.is-transmitting .wt-ptt-btn {
+    background: radial-gradient(circle, #ff2238 0%, #a00b1a 100%);
+    color: #ffffff;
+    border-color: #ff6b7a;
+    box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 51, 68, 0.8);
+}
+
+/* PTT State: BUSY / LOCKED */
+.wt-ptt-outer-ring.is-busy {
+    border-color: var(--wt-accent-amber);
+    box-shadow: 0 0 20px rgba(255, 170, 0, 0.4);
+    opacity: 0.75;
+}
+
+.wt-ptt-outer-ring.is-busy .wt-ptt-btn {
+    background: radial-gradient(circle, #2b2210 0%, #17130a 100%);
+    color: #ffaa00;
+    border-color: #996600;
+    cursor: not-allowed;
+}
+
+/* --------------------------------------------------------------------------
+   Participant List Panel
+   -------------------------------------------------------------------------- */
+.wt-participants-panel {
+    background: rgba(13, 18, 25, 0.85);
+    border: 1px solid var(--wt-border);
+    max-height: 180px;
+    overflow-y: auto;
+}
+
+.wt-participants-panel::-webkit-scrollbar {
+    width: 6px;
+}
+
+.wt-participants-panel::-webkit-scrollbar-thumb {
+    background: #232c3d;
+    border-radius: 3px;
+}
+
+.wt-panel-title {
+    font-family: var(--wt-font-heading);
+    font-size: 0.75rem;
+    letter-spacing: 1.5px;
+    color: var(--wt-text-dim);
+}
+
+.wt-badge-count {
+    background: #1c2534;
+    color: #8da2bd;
+    font-family: var(--wt-font-mono);
+    font-size: 0.72rem;
+}
+
+.wt-participant-item {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    transition: background 0.2s ease;
+}
+
+.wt-participant-item.is-speaking {
+    background: rgba(255, 51, 68, 0.15);
+    border-color: rgba(255, 51, 68, 0.4);
+}
+
+.wt-badge-you {
+    font-size: 0.6rem;
+    padding: 2px 5px;
+    letter-spacing: 1px;
+}
+
+.wt-status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.wt-dot-online {
+    background-color: var(--wt-accent-green);
+    box-shadow: 0 0 6px var(--wt-accent-green);
+}
+
+.wt-dot-speaking {
+    background-color: var(--wt-accent-red);
+    box-shadow: 0 0 8px var(--wt-accent-red);
+    animation: wt-pulse 0.8s infinite;
+}
+
+.wt-peer-state {
+    font-family: var(--wt-font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+/* --------------------------------------------------------------------------
+   Buttons & Form Controls
+   -------------------------------------------------------------------------- */
+.wt-btn-primary {
+    background: linear-gradient(180deg, #00d9ff 0%, #0088cc 100%);
+    border: none;
+    color: #06111e;
+    font-family: var(--wt-font-heading);
+    letter-spacing: 1.5px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 217, 255, 0.35);
+    transition: all 0.2s ease;
+}
+
+.wt-btn-primary:hover {
+    background: linear-gradient(180deg, #33e1ff 0%, #0099e6 100%);
+    box-shadow: 0 6px 20px rgba(0, 217, 255, 0.5);
+    color: #000;
+}
+
+.wt-btn-leave {
+    background: rgba(255, 51, 68, 0.15);
+    border: 1px solid rgba(255, 51, 68, 0.4);
+    color: #ff6b7a;
+    font-family: var(--wt-font-heading);
+    letter-spacing: 1px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.wt-btn-leave:hover {
+    background: rgba(255, 51, 68, 0.3);
+    color: #ffffff;
+    border-color: #ff3344;
+}
+
+.wt-deck-btn {
+    border-color: var(--wt-border);
+    color: #a0aec0;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+}
+
+.wt-deck-btn.active {
+    background: rgba(0, 217, 255, 0.15);
+    border-color: var(--wt-accent-cyan);
+    color: var(--wt-accent-cyan);
+}
+
+.wt-form-input {
+    background: #0d121a;
+    border: 1px solid var(--wt-border);
+    color: #f0f6fc;
+    border-radius: 8px;
+    padding: 10px 14px;
+}
+
+.wt-form-input:focus {
+    background: #111722;
+    border-color: var(--wt-accent-cyan);
+    box-shadow: 0 0 0 3px rgba(0, 217, 255, 0.2);
+    color: #ffffff;
+}
+
+.wt-input-group-text {
+    background: #151c27;
+    border: 1px solid var(--wt-border);
+    color: var(--wt-text-dim);
+}
+
+.wt-input-label {
+    font-family: var(--wt-font-heading);
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    color: #c9d1d9;
+}
+
+.wt-chip-btn {
+    background: #161e29;
+    border: 1px solid var(--wt-border);
+    color: #8fa0b5;
+    font-family: var(--wt-font-mono);
+    font-size: 0.72rem;
+    border-radius: 6px;
+    padding: 2px 8px;
+}
+
+.wt-chip-btn:hover {
+    background: #202b3b;
+    color: #ffffff;
+    border-color: var(--wt-accent-cyan);
+}
+
+/* --------------------------------------------------------------------------
+   QR Code Box
+   -------------------------------------------------------------------------- */
+.wt-qr-box {
+    background: #0f151e;
+    border: 1px dashed #293548;
+}
+
+.wt-qr-canvas {
+    max-width: 160px;
+    height: auto;
+}
+
+.wt-url-text {
+    word-break: break-all;
+    font-family: var(--wt-font-mono);
+    font-size: 0.75rem;
+}
+
+.wt-qr-toggle-btn.active {
+    background: rgba(0, 217, 255, 0.15);
+    border-color: var(--wt-accent-cyan);
+    color: var(--wt-accent-cyan);
+}
+
+/* --------------------------------------------------------------------------
+   PWA Installation Prompt Banner
+   -------------------------------------------------------------------------- */
+.wt-pwa-prompt {
+    position: fixed;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 92%;
+    max-width: 440px;
+    background: #182230;
+    border: 1px solid #2d3e56;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    z-index: 1050;
+    animation: wt-slide-up 0.3s ease;
+}
+
+@keyframes wt-slide-up {
+    from { transform: translate(-50%, 40px); opacity: 0; }
+    to { transform: translate(-50%, 0); opacity: 1; }
+}
+
+/* --------------------------------------------------------------------------
+   Responsive Mobile Adjustments
+   -------------------------------------------------------------------------- */
+@media (max-width: 576px) {
+    .wt-app-title {
+        font-size: 1.6rem;
+    }
+    .wt-ptt-outer-ring {
+        width: 156px;
+        height: 156px;
+    }
+    .wt-lcd-channel {
+        font-size: 1.25rem;
+        max-width: 150px;
+    }
+    .wt-handset {
+        min-height: 94vh;
+    }
+}

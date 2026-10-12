@@ -1,0 +1,35 @@
+# ----------------------------------------------------
+# Walkie-Talkie Apache Configuration (Root)
+# ----------------------------------------------------
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Disable directory browsing
+    Options -Indexes
+
+    # Protect internal application directories & dotfiles
+    RewriteRule ^(app|config|storage|views)($|/) - [F,L]
+    RewriteRule (^|/)\.(?!well-known) - [F,L]
+
+    # Route public assets if requested without /public prefix
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^assets/(.*)$ public/assets/$1 [L]
+
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^sw\.js$ public/sw.js [L]
+
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^manifest\.webmanifest$ public/manifest.webmanifest [L]
+
+    # Front Controller fallback
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ index.php [L,QSA]
+</IfModule>
+
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>

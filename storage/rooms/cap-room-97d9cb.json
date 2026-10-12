@@ -1,0 +1,123 @@
+{
+    "channel": "cap-room-97d9cb",
+    "created_at": 1791788417,
+    "updated_at": 1791788417,
+    "speaker": null,
+    "peers": {
+        "peer_1": {
+            "peer_id": "peer_1",
+            "nickname": "User_1",
+            "joined_at": 1791788417,
+            "last_seen": 1791788417
+        },
+        "peer_2": {
+            "peer_id": "peer_2",
+            "nickname": "User_2",
+            "joined_at": 1791788417,
+            "last_seen": 1791788417
+        },
+        "peer_3": {
+            "peer_id": "peer_3",
+            "nickname": "User_3",
+            "joined_at": 1791788417,
+            "last_seen": 1791788417
+        },
+        "peer_4": {
+            "peer_id": "peer_4",
+            "nickname": "User_4",
+            "joined_at": 1791788417,
+            "last_seen": 1791788417
+        },
+        "peer_5": {
+            "peer_id": "peer_5",
+            "nickname": "User_5",
+            "joined_at": 1791788417,
+            "last_seen": 1791788417
+        },
+        "peer_6": {
+            "peer_id": "peer_6",
+            "nickname": "User_6",
+            "joined_at": 1791788417,
+            "last_seen": 1791788417
+        },
+        "peer_7": {
+            "peer_id": "peer_7",
+            "nickname": "User_7",
+            "joined_at": 1791788417,
+            "last_seen": 1791788417
+        },
+        "peer_8": {
+            "peer_id": "peer_8",
+            "nickname": "User_8",
+            "joined_at": 1791788417,
+            "last_seen": 1791788417
+        }
+    },
+    "sequence": 8,
+    "events": [
+        {
+            "type": "peer_joined",
+            "peer_id": "peer_1",
+            "nickname": "User_1",
+            "seq": 1,
+            "target": null,
+            "timestamp": 1791788417
+        },
+        {
+            "type": "peer_joined",
+            "peer_id": "peer_2",
+            "nickname": "User_2",
+            "seq": 2,
+            "target": null,
+            "timestamp": 1791788417
+        },
+        {
+            "type": "peer_joined",
+            "peer_id": "peer_3",
+            "nickname": "User_3",
+            "seq": 3,
+            "target": null,
+            "timestamp": 1791788417
+        },
+        {
+            "type": "peer_joined",
+            "peer_id": "peer_4",
+            "nickname": "User_4",
+            "seq": 4,
+            "target": null,
+            "timestamp": 1791788417
+        },
+        {
+            "type": "peer_joined",
+            "peer_id": "peer_5",
+            "nickname": "User_5",
+            "seq": 5,
+            "target": null,
+            "timestamp": 1791788417
+        },
+        {
+            "type": "peer_joined",
+            "peer_id": "peer_6",
+            "nickname": "User_6",
+            "seq": 6,
+            "target": null,
+            "timestamp": 1791788417
+        },
+        {
+            "type": "peer_joined",
+            "peer_id": "peer_7",
+            "nickname": "User_7",
+            "seq": 7,
+            "target": null,
+            "timestamp": 1791788417
+        },
+        {
+            "type": "peer_joined",
+            "peer_id": "peer_8",
+            "nickname": "User_8",
+            "seq": 8,
+            "target": null,
+            "timestamp": 1791788417
+        }
+    ]
+}

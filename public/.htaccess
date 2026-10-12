@@ -1,0 +1,23 @@
+# ----------------------------------------------------
+# Walkie-Talkie Apache Configuration (Public Directory)
+# ----------------------------------------------------
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    Options -Indexes
+
+    # Serve existing files directly
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # Front Controller
+    RewriteRule ^ index.php [L,QSA]
+</IfModule>
+
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
