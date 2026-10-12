@@ -4,7 +4,7 @@
  * Explicitly excludes dynamic signaling APIs and private communication data.
  */
 
-const CACHE_NAME = 'wt-shell-v1.0.0';
+const CACHE_NAME = 'wt-shell-v1.0.1';
 const SHELL_ASSETS = [
     './',
     'assets/css/app.css',

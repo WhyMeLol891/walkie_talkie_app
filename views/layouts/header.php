@@ -6,7 +6,7 @@ use App\Helpers\SecurityHelper;
 
 $pageTitle = $pageTitle ?? ($appName ?? 'Walkie Talkie');
 $manifestUrl = UrlHelper::url('manifest.webmanifest');
-$cssUrl = UrlHelper::asset('css/app.css');
+$cssUrl = UrlHelper::asset('css/app.css') . '?v=1.0.1';
 $faviconSvg = UrlHelper::asset('icons/favicon.svg');
 ?>
 <!DOCTYPE html>

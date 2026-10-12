@@ -31,14 +31,20 @@ class PTTController {
     bindEvents() {
         if (!this.button) return;
 
-        // Pointer Events (Unified Mouse, Touch & Stylus)
+        // Pointer Events (Unified Mouse, Touch & Stylus) with Pointer Capture
         this.button.addEventListener('pointerdown', (e) => {
             e.preventDefault();
+            try {
+                this.button.setPointerCapture(e.pointerId);
+            } catch (err) {}
             this.handlePressStart();
         });
 
         this.button.addEventListener('pointerup', (e) => {
             e.preventDefault();
+            try {
+                this.button.releasePointerCapture(e.pointerId);
+            } catch (err) {}
             this.handlePressEnd();
         });
 
@@ -47,28 +53,9 @@ class PTTController {
             this.handlePressEnd();
         });
 
-        this.button.addEventListener('pointerleave', (e) => {
-            if (this.isPressed) {
-                e.preventDefault();
-                this.handlePressEnd();
-            }
-        });
-
-        // Touch event fallbacks for mobile browsers
-        this.button.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            this.handlePressStart();
-        }, { passive: false });
-
-        this.button.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            this.handlePressEnd();
-        }, { passive: false });
-
-        this.button.addEventListener('touchcancel', (e) => {
-            e.preventDefault();
-            this.handlePressEnd();
-        }, { passive: false });
+        // Prevent synthetic click and context menu on mobile long-press
+        this.button.addEventListener('click', (e) => e.preventDefault());
+        this.button.addEventListener('contextmenu', (e) => e.preventDefault());
 
         // Keyboard Spacebar Navigation Support
         window.addEventListener('keydown', (e) => {
@@ -97,9 +84,6 @@ class PTTController {
                 this.handlePressEnd();
             }
         });
-
-        // Prevent context menu on long press
-        this.button.addEventListener('contextmenu', (e) => e.preventDefault());
     }
 
     /**
@@ -108,6 +92,15 @@ class PTTController {
     async handlePressStart() {
         if (this.isPressed) return;
         this.isPressed = true;
+
+        // Unlock audio context if needed
+        if (this.webrtcManager) {
+            this.webrtcManager.unlockAllAudio();
+            // Pre-request mic if not granted yet
+            if (!this.webrtcManager.localStream && !this.webrtcManager.micPermissionGranted) {
+                await this.webrtcManager.initLocalAudio();
+            }
+        }
 
         // Quick client-side check if channel is already occupied
         if (this.isChannelBusy && this.activeSpeaker && this.activeSpeaker.peer_id !== this.signalingClient.peerId) {

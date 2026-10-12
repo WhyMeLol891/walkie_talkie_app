@@ -24,6 +24,6 @@ use App\Helpers\UrlHelper;
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     
     <!-- PWA Service Worker Handler -->
-    <script src="<?= UrlHelper::asset('js/pwa.js') ?>"></script>
+    <script src="<?= UrlHelper::asset('js/pwa.js') ?>?v=1.0.1"></script>
 </body>
 </html>

@@ -1,0 +1,25 @@
+{
+    "channel": "alpha-ops",
+    "created_at": 1791791934,
+    "updated_at": 1791791934,
+    "speaker": null,
+    "peers": {
+        "peer_1d61e8fa92ba": {
+            "peer_id": "peer_1d61e8fa92ba",
+            "nickname": "Commander",
+            "joined_at": 1791791934,
+            "last_seen": 1791791934
+        }
+    },
+    "sequence": 1,
+    "events": [
+        {
+            "type": "peer_joined",
+            "peer_id": "peer_1d61e8fa92ba",
+            "nickname": "Commander",
+            "seq": 1,
+            "target": null,
+            "timestamp": 1791791934
+        }
+    ]
+}

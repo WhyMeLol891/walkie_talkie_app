@@ -86,8 +86,7 @@ class SignalingService
 
     private function handlePoll(string $channel, string $peerId, int $sinceSeq): array
     {
-        $this->roomService->updatePeerHeartbeat($channel, $peerId);
-        $room = $this->roomService->readRoom($channel);
+        $room = $this->roomService->updateHeartbeatAndGetRoom($channel, $peerId);
 
         // Fetch events since client sequence
         $events = $this->roomService->getPendingEvents($room, $peerId, $sinceSeq);

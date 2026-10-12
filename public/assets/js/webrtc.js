@@ -17,6 +17,32 @@ class WebRTCManager {
         this.iceServers = config.iceServers && config.iceServers.length > 0
             ? config.iceServers
             : [{ urls: 'stun:stun.l.google.com:19302' }, { urls: 'stun:stun1.l.google.com:19302' }];
+
+        // Global audio unlock listener on user interaction
+        this.bindAudioUnlockListener();
+    }
+
+    bindAudioUnlockListener() {
+        const unlock = () => {
+            this.unlockAllAudio();
+        };
+        window.addEventListener('pointerdown', unlock, { passive: true });
+        window.addEventListener('keydown', unlock, { passive: true });
+        window.addEventListener('touchstart', unlock, { passive: true });
+    }
+
+    unlockAllAudio() {
+        this.remoteAudioElements.forEach(audioEl => {
+            if (audioEl && audioEl.paused) {
+                audioEl.play().catch(() => {});
+            }
+        });
+
+        if (window.audioMonitor && window.audioMonitor.audioCtx) {
+            if (window.audioMonitor.audioCtx.state === 'suspended') {
+                window.audioMonitor.audioCtx.resume().catch(() => {});
+            }
+        }
     }
 
     /**
@@ -24,7 +50,7 @@ class WebRTCManager {
      */
     async initLocalAudio() {
         if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-            console.error('WebRTC getUserMedia is not supported in this browser environment.');
+            console.warn('WebRTC getUserMedia is not supported in this browser environment.');
             this.showMicWarning('Your browser does not support WebRTC audio access.');
             return false;
         }
@@ -47,6 +73,10 @@ class WebRTCManager {
                 this.localAudioTrack.enabled = false;
                 this.micPermissionGranted = true;
                 this.updateMicUi(false);
+
+                // Add track to any already created peer connections
+                this.syncLocalTrackToConnections();
+
                 return true;
             }
         } catch (err) {
@@ -56,6 +86,21 @@ class WebRTCManager {
             this.updateMicUi(false);
             return false;
         }
+    }
+
+    syncLocalTrackToConnections() {
+        if (!this.localAudioTrack || !this.localStream) return;
+        this.peerConnections.forEach(pc => {
+            const senders = pc.getSenders();
+            const hasTrack = senders.some(s => s.track === this.localAudioTrack);
+            if (!hasTrack) {
+                try {
+                    pc.addTrack(this.localAudioTrack, this.localStream);
+                } catch (e) {
+                    console.warn('Failed to add track to existing pc:', e);
+                }
+            }
+        });
     }
 
     updateMicUi(isTransmitting) {
@@ -120,27 +165,29 @@ class WebRTCManager {
         const pc = new RTCPeerConnection(rtcConfig);
 
         // Add local track if available
-        if (this.localStream) {
-            this.localStream.getTracks().forEach(track => {
-                pc.addTrack(track, this.localStream);
-            });
+        if (this.localStream && this.localAudioTrack) {
+            pc.addTrack(this.localAudioTrack, this.localStream);
         }
 
         // ICE candidate handler
         pc.onicecandidate = (event) => {
             if (event.candidate && this.onSignal) {
+                const candJson = event.candidate.toJSON ? event.candidate.toJSON() : {
+                    candidate: event.candidate.candidate,
+                    sdpMid: event.candidate.sdpMid,
+                    sdpMLineIndex: event.candidate.sdpMLineIndex
+                };
                 this.onSignal(remotePeerId, {
                     type: 'candidate',
-                    candidate: event.candidate
+                    candidate: candJson
                 });
             }
         };
 
-        // Incoming audio track handler
+        // Incoming audio track handler (supports standard streams or fallback MediaStream)
         pc.ontrack = (event) => {
-            if (event.streams && event.streams[0]) {
-                this.attachRemoteStream(remotePeerId, event.streams[0]);
-            }
+            let stream = (event.streams && event.streams[0]) ? event.streams[0] : new MediaStream([event.track]);
+            this.attachRemoteStream(remotePeerId, stream);
         };
 
         // Connection state logging & cleanup
@@ -186,9 +233,10 @@ class WebRTCManager {
             await pc.setLocalDescription(offer);
 
             if (this.onSignal) {
+                const sdpStr = pc.localDescription.sdp || offer.sdp;
                 this.onSignal(remotePeerId, {
                     type: 'offer',
-                    sdp: pc.localDescription
+                    sdp: sdpStr
                 });
             }
         } catch (err) {
@@ -206,13 +254,21 @@ class WebRTCManager {
             const pc = this.getOrCreatePeerConnection(remotePeerId);
 
             if (data.type === 'offer') {
-                await pc.setRemoteDescription(new RTCSessionDescription(data.sdp));
+                const sdpStr = typeof data.sdp === 'string' ? data.sdp : (data.sdp && data.sdp.sdp ? data.sdp.sdp : '');
+                if (!sdpStr) return;
+
+                await pc.setRemoteDescription(new RTCSessionDescription({
+                    type: 'offer',
+                    sdp: sdpStr
+                }));
 
                 // Process any queued ICE candidates
                 if (this.iceCandidatesQueue.has(remotePeerId)) {
                     const queue = this.iceCandidatesQueue.get(remotePeerId);
                     for (const candidate of queue) {
-                        await pc.addIceCandidate(new RTCIceCandidate(candidate));
+                        try {
+                            await pc.addIceCandidate(new RTCIceCandidate(candidate));
+                        } catch (e) {}
                     }
                     this.iceCandidatesQueue.delete(remotePeerId);
                 }
@@ -221,25 +277,36 @@ class WebRTCManager {
                 await pc.setLocalDescription(answer);
 
                 if (this.onSignal) {
+                    const answerSdpStr = pc.localDescription.sdp || answer.sdp;
                     this.onSignal(remotePeerId, {
                         type: 'answer',
-                        sdp: pc.localDescription
+                        sdp: answerSdpStr
                     });
                 }
             } else if (data.type === 'answer') {
-                await pc.setRemoteDescription(new RTCSessionDescription(data.sdp));
+                const sdpStr = typeof data.sdp === 'string' ? data.sdp : (data.sdp && data.sdp.sdp ? data.sdp.sdp : '');
+                if (!sdpStr) return;
+
+                await pc.setRemoteDescription(new RTCSessionDescription({
+                    type: 'answer',
+                    sdp: sdpStr
+                }));
 
                 // Process queued ICE candidates
                 if (this.iceCandidatesQueue.has(remotePeerId)) {
                     const queue = this.iceCandidatesQueue.get(remotePeerId);
                     for (const candidate of queue) {
-                        await pc.addIceCandidate(new RTCIceCandidate(candidate));
+                        try {
+                            await pc.addIceCandidate(new RTCIceCandidate(candidate));
+                        } catch (e) {}
                     }
                     this.iceCandidatesQueue.delete(remotePeerId);
                 }
             } else if (data.type === 'candidate' && data.candidate) {
                 if (pc.remoteDescription && pc.remoteDescription.type) {
-                    await pc.addIceCandidate(new RTCIceCandidate(data.candidate));
+                    try {
+                        await pc.addIceCandidate(new RTCIceCandidate(data.candidate));
+                    } catch (e) {}
                 } else {
                     // Queue until remote description is ready
                     if (!this.iceCandidatesQueue.has(remotePeerId)) {
@@ -267,6 +334,7 @@ class WebRTCManager {
             this.remoteAudioElements.set(remotePeerId, audioEl);
         }
         audioEl.srcObject = stream;
+        audioEl.play().catch(() => {});
 
         // If audio level monitor exists and this peer is currently speaking, attach stream
         if (window.audioMonitor && window.currentSpeakerId === remotePeerId) {

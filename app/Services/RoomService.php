@@ -263,16 +263,24 @@ class RoomService
     }
 
     /**
-     * Heartbeat / polling update
+     * Heartbeat / polling update and return updated room in one atomic lock
      */
-    public function updatePeerHeartbeat(string $channel, string $peerId): void
+    public function updateHeartbeatAndGetRoom(string $channel, string $peerId): array
     {
-        $this->mutateRoom($channel, function (array $room) use ($peerId) {
+        return $this->mutateRoom($channel, function (array $room) use ($peerId) {
             if (isset($room['peers'][$peerId])) {
                 $room['peers'][$peerId]['last_seen'] = time();
             }
             return $room;
         });
+    }
+
+    /**
+     * Heartbeat / polling update
+     */
+    public function updatePeerHeartbeat(string $channel, string $peerId): void
+    {
+        $this->updateHeartbeatAndGetRoom($channel, $peerId);
     }
 
     /**

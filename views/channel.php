@@ -189,10 +189,10 @@ window.WALKIE_CONFIG = {
 </script>
 
 <!-- Dedicated Modular Scripts -->
-<script src="<?= UrlHelper::asset('js/audio-level.js') ?>"></script>
-<script src="<?= UrlHelper::asset('js/webrtc.js') ?>"></script>
-<script src="<?= UrlHelper::asset('js/signaling.js') ?>"></script>
-<script src="<?= UrlHelper::asset('js/ptt.js') ?>"></script>
-<script src="<?= UrlHelper::asset('js/app.js') ?>"></script>
+<script src="<?= UrlHelper::asset('js/audio-level.js') ?>?v=1.0.1"></script>
+<script src="<?= UrlHelper::asset('js/webrtc.js') ?>?v=1.0.1"></script>
+<script src="<?= UrlHelper::asset('js/signaling.js') ?>?v=1.0.1"></script>
+<script src="<?= UrlHelper::asset('js/ptt.js') ?>?v=1.0.1"></script>
+<script src="<?= UrlHelper::asset('js/app.js') ?>?v=1.0.1"></script>
 
 <?php require __DIR__ . '/layouts/footer.php'; ?>

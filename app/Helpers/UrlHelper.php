@@ -14,9 +14,13 @@ class UrlHelper
     /**
      * Set or auto-detect application base path
      */
-    public static function setBasePath(string $basePath): void
+    public static function setBasePath(?string $basePath): void
     {
-        self::$basePath = rtrim($basePath, '/');
+        if ($basePath !== null && trim($basePath) !== '') {
+            self::$basePath = rtrim(trim($basePath), '/');
+        } else {
+            self::$basePath = null; // Forces auto-detection
+        }
     }
 
     /**
@@ -30,7 +34,7 @@ class UrlHelper
 
         $scriptDir = dirname($_SERVER['SCRIPT_NAME'] ?? '');
         $scriptDir = str_replace('\\', '/', $scriptDir);
-        if ($scriptDir === '/' || $scriptDir === '.') {
+        if ($scriptDir === '/' || $scriptDir === '.' || $scriptDir === '') {
             self::$basePath = '';
         } else {
             $base = rtrim($scriptDir, '/');
@@ -50,11 +54,11 @@ class UrlHelper
     public static function url(string $path = ''): string
     {
         $base = self::getBasePath();
-        $path = '/' . ltrim($path, '/');
-        if ($path === '/') {
+        $path = trim($path, '/');
+        if ($path === '') {
             return $base === '' ? '/' : $base . '/';
         }
-        return $base . $path;
+        return ($base === '' ? '' : $base) . '/' . $path;
     }
 
     /**
@@ -64,7 +68,6 @@ class UrlHelper
     {
         $base = self::getBasePath();
         $path = ltrim($path, '/');
-        // If public folder is exposed in assets path
         return ($base === '' ? '' : $base) . '/assets/' . $path;
     }
 

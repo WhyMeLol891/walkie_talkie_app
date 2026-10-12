@@ -161,7 +161,7 @@ require __DIR__ . '/layouts/header.php';
 </div>
 
 <!-- Standalone Pure JS QR Code Generator Library (Zero Dependencies, Offline LAN Capable) -->
-<script src="<?= UrlHelper::asset('js/qrcode.min.js') ?>"></script>
+<script src="<?= UrlHelper::asset('js/qrcode.min.js') ?>?v=1.0.1"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Quick Channel Chips
