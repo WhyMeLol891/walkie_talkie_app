@@ -1,0 +1,25 @@
+{
+    "channel": "general",
+    "created_at": 1791880902,
+    "updated_at": 1791880902,
+    "speaker": null,
+    "peers": {
+        "peer_8568db65e072": {
+            "peer_id": "peer_8568db65e072",
+            "nickname": "PhoneTest",
+            "joined_at": 1791880902,
+            "last_seen": 1791880902
+        }
+    },
+    "sequence": 1,
+    "events": [
+        {
+            "type": "peer_joined",
+            "peer_id": "peer_8568db65e072",
+            "nickname": "PhoneTest",
+            "seq": 1,
+            "target": null,
+            "timestamp": 1791880902
+        }
+    ]
+}

@@ -161,7 +161,7 @@ require __DIR__ . '/layouts/header.php';
 </div>
 
 <!-- Standalone Pure JS QR Code Generator Library (Zero Dependencies, Offline LAN Capable) -->
-<script src="<?= UrlHelper::asset('js/qrcode.min.js') ?>?v=1.0.2"></script>
+<script src="<?= UrlHelper::asset('js/qrcode.min.js') ?>?v=1.0.3"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Quick Channel Chips
@@ -177,8 +177,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const btnToggleQr = document.getElementById('btnToggleQr');
     const qrCard = document.getElementById('qrCodeCard');
     const qrCanvas = document.getElementById('qrCanvas');
-    // Use the server-generated LAN URL rather than window.location.href,
-    // which may contain localhost and cannot be opened by a phone.
+    // Use the server-generated LAN URL. The desktop page may be opened through
+    // localhost, which is not reachable when the QR is scanned by a phone.
     const appUrl = <?= json_encode($appUrl, JSON_THROW_ON_ERROR) ?>;
     let qrRendered = false;
 
