@@ -177,7 +177,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const btnToggleQr = document.getElementById('btnToggleQr');
     const qrCard = document.getElementById('qrCodeCard');
     const qrCanvas = document.getElementById('qrCanvas');
-    const appUrl = window.location.href;
+    // Use the server-generated LAN URL rather than window.location.href,
+    // which may contain localhost and cannot be opened by a phone.
+    const appUrl = <?= json_encode($appUrl, JSON_THROW_ON_ERROR) ?>;
     let qrRendered = false;
 
     if (btnToggleQr && qrCard) {
@@ -189,6 +191,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (!qrRendered && window.QRCodeLib) {
                     window.QRCodeLib.render(appUrl, qrCanvas, { width: 160, height: 160 });
                     qrRendered = true;
+                } else if (!qrRendered) {
+                    console.error('QR code library failed to load.');
                 }
             } else {
                 qrCard.classList.add('d-none');

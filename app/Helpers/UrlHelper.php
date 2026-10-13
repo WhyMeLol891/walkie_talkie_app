@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Helpers;
 
+use App\Core\Env;
+
 /**
  * Class UrlHelper
  * Resolves paths and URLs based on application base directory.
@@ -80,7 +82,23 @@ class UrlHelper
             || ($_SERVER['SERVER_PORT'] ?? 80) == 443
             || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https');
         $protocol = $isHttps ? 'https://' : 'http://';
+
+        // A phone cannot resolve a URL containing localhost. Configure the
+        // LAN address explicitly when the app is opened from a local machine.
+        $configuredUrl = trim((string) Env::get('APP_PUBLIC_URL', ''));
+        if ($configuredUrl !== '') {
+            return rtrim($configuredUrl, '/') . self::url($path);
+        }
+
         $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+        $hostname = preg_replace('/:\d+$/', '', $host) ?: $host;
+        if ($hostname === 'localhost' || $hostname === '127.0.0.1' || $hostname === '::1') {
+            $lanHost = gethostbyname(gethostname());
+            if ($lanHost !== '127.0.0.1') {
+                $host = $lanHost . ((($_SERVER['SERVER_PORT'] ?? 80) != 80) ? ':' . $_SERVER['SERVER_PORT'] : '');
+            }
+        }
+
         return $protocol . $host . self::url($path);
     }
 }
