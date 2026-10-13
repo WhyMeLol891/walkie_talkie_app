@@ -146,7 +146,7 @@ Copy-Item .env.example .env
 Key configuration parameters in `.env`:
 * `APP_NAME="Walkie Talkie PWA"`
 * `APP_BASE_PATH=` *(Leave blank to automatically detect `/walkie_talkie_app`)*
-* `APP_PUBLIC_URL=` *(Set to a phone-reachable LAN URL, e.g. `http://192.168.1.20/walkie_talkie_app`)*
+* `APP_PUBLIC_URL=` *(Set to a phone-reachable LAN origin, e.g. `http://192.168.1.20`; the app path is added automatically)*
 * `SIGNAL_SECRET=your_custom_secret_key` *(HMAC signing salt)*
 * `SIGNAL_MAX_PEERS=8` *(Maximum operators per channel)*
 * `SIGNAL_FLOOR_TIMEOUT_MS=30000` *(30-second speaking limit)*
@@ -166,7 +166,7 @@ http://localhost/
 
 For phone pairing, connect the phone and computer to the same Wi-Fi network.
 If the QR code points to an unreachable host, set `APP_PUBLIC_URL` to the
-computer's LAN address and allow Apache through the Windows firewall. The QR
+computer's LAN origin and allow Apache through the Windows firewall. The QR
 code uses a standards-compliant encoder and contains this configured URL.
 
 ### Step 5: Test Voice Communication

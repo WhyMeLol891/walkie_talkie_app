@@ -611,8 +611,10 @@ body.wt-body {
 }
 
 .wt-qr-canvas {
-    max-width: 160px;
+    width: 240px;
+    max-width: 100%;
     height: auto;
+    image-rendering: pixelated;
 }
 
 .wt-url-text {

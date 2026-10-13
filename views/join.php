@@ -140,7 +140,7 @@ require __DIR__ . '/layouts/header.php';
                                 <div class="fw-semibold text-light mb-1">Open on your phone</div>
                                 <div class="small text-secondary mb-2">Scan this code on the same Wi-Fi network to connect mobile browsers</div>
                                 <div class="d-flex justify-content-center my-2">
-                                    <canvas id="qrCanvas" class="wt-qr-canvas p-2 bg-white rounded-2 shadow-sm"></canvas>
+                                    <canvas id="qrCanvas" class="wt-qr-canvas bg-white rounded-2 shadow-sm"></canvas>
                                 </div>
                                 <div class="mt-2">
                                     <code class="small text-warning wt-url-text" id="appUrlDisplay"><?= SecurityHelper::e($appUrl) ?></code>
@@ -161,7 +161,7 @@ require __DIR__ . '/layouts/header.php';
 </div>
 
 <!-- Standalone Pure JS QR Code Generator Library (Zero Dependencies, Offline LAN Capable) -->
-<script src="<?= UrlHelper::asset('js/qrcode.min.js') ?>?v=1.0.1"></script>
+<script src="<?= UrlHelper::asset('js/qrcode.min.js') ?>?v=1.0.2"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Quick Channel Chips
@@ -189,7 +189,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 qrCard.classList.remove('d-none');
                 btnToggleQr.classList.add('active');
                 if (!qrRendered && window.QRCodeLib) {
-                    window.QRCodeLib.render(appUrl, qrCanvas, { width: 160, height: 160 });
+                    window.QRCodeLib.render(appUrl, qrCanvas, { width: 240, height: 240 });
                     qrRendered = true;
                 } else if (!qrRendered) {
                     console.error('QR code library failed to load.');
